@@ -49,14 +49,6 @@ import { REDUX_FORM_NAME } from '../form';
  *     export default App;
  */
 class CreateController extends Component {
-    getBasePath() {
-        const { location } = this.props;
-        return location.pathname
-            .split('/')
-            .slice(0, -1)
-            .join('/');
-    }
-
     defaultRedirectRoute() {
         const { hasShow, hasEdit } = this.props;
         if (hasEdit) return 'edit';
@@ -68,7 +60,7 @@ class CreateController extends Component {
         this.props.crudCreate(
             this.props.resource,
             record,
-            this.getBasePath(),
+            this.props.basePath,
             redirect,
             this.props.formName
         );
@@ -76,6 +68,7 @@ class CreateController extends Component {
 
     render() {
         const {
+            basePath,
             children,
             isLoading,
             record,
@@ -85,7 +78,6 @@ class CreateController extends Component {
         } = this.props;
 
         if (!children) return null;
-        const basePath = this.getBasePath();
 
         const resourceName = translate(`resources.${resource}.name`, {
             smart_count: 1,
@@ -109,6 +101,7 @@ class CreateController extends Component {
 }
 
 CreateController.propTypes = {
+    basePath: PropTypes.string.isRequired,
     children: PropTypes.func.isRequired,
     crudCreate: PropTypes.func.isRequired,
     formName: PropTypes.string,
@@ -117,8 +110,6 @@ CreateController.propTypes = {
     hasList: PropTypes.bool,
     hasShow: PropTypes.bool,
     isLoading: PropTypes.bool.isRequired,
-    location: PropTypes.object.isRequired,
-    match: PropTypes.object.isRequired,
     record: PropTypes.object,
     resource: PropTypes.string.isRequired,
     title: PropTypes.any,

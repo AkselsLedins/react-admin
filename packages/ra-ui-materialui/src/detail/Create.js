@@ -152,8 +152,6 @@ Create.propTypes = {
     hasCreate: PropTypes.bool,
     hasEdit: PropTypes.bool,
     hasShow: PropTypes.bool,
-    location: PropTypes.object.isRequired,
-    match: PropTypes.object.isRequired,
     resource: PropTypes.string.isRequired,
     title: PropTypes.any,
     record: PropTypes.object,

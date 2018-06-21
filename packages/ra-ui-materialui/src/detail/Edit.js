@@ -170,8 +170,7 @@ Edit.propTypes = {
     hasEdit: PropTypes.bool,
     hasShow: PropTypes.bool,
     hasList: PropTypes.bool,
-    location: PropTypes.object.isRequired,
-    match: PropTypes.object.isRequired,
+    id: PropTypes.any.isRequired,
     resource: PropTypes.string.isRequired,
     title: PropTypes.any,
 };

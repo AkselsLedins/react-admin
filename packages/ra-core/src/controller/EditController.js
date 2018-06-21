@@ -65,20 +65,12 @@ export class EditController extends Component {
         }
     }
 
-    getBasePath() {
-        const { location } = this.props;
-        return location.pathname
-            .split('/')
-            .slice(0, -1)
-            .join('/');
-    }
-
     defaultRedirectRoute() {
         return 'list';
     }
 
     updateData(resource = this.props.resource, id = this.props.id) {
-        this.props.crudGetOne(resource, id, this.getBasePath());
+        this.props.crudGetOne(resource, id, this.props.basePath);
     }
 
     save = (data, redirect) => {
@@ -94,7 +86,7 @@ export class EditController extends Component {
                     this.props.id,
                     data,
                     this.props.record,
-                    this.getBasePath(),
+                    this.props.basePath,
                     redirect,
                     this.props.formName
                 )
@@ -105,7 +97,7 @@ export class EditController extends Component {
                 this.props.id,
                 data,
                 this.props.record,
-                this.getBasePath(),
+                this.props.basePath,
                 redirect,
                 this.props.formName
             );
@@ -114,6 +106,7 @@ export class EditController extends Component {
 
     render() {
         const {
+            basePath,
             children,
             record,
             id,
@@ -125,8 +118,6 @@ export class EditController extends Component {
         } = this.props;
 
         if (!children) return null;
-
-        const basePath = this.getBasePath();
 
         const resourceName = translate(`resources.${resource}.name`, {
             smart_count: 1,
@@ -154,6 +145,7 @@ export class EditController extends Component {
 }
 
 EditController.propTypes = {
+    basePath: PropTypes.string.isRequired,
     children: PropTypes.func.isRequired,
     crudGetOne: PropTypes.func.isRequired,
     dispatchCrudUpdate: PropTypes.func.isRequired,
@@ -165,8 +157,6 @@ EditController.propTypes = {
     hasList: PropTypes.bool,
     id: PropTypes.string.isRequired,
     isLoading: PropTypes.bool.isRequired,
-    location: PropTypes.object.isRequired,
-    match: PropTypes.object.isRequired,
     resetForm: PropTypes.func.isRequired,
     resource: PropTypes.string.isRequired,
     startUndoable: PropTypes.func.isRequired,
@@ -182,11 +172,9 @@ EditController.defaultProps = {
 
 function mapStateToProps(state, props) {
     return {
-        id: decodeURIComponent(props.match.params.id),
+        id: props.id,
         record: state.admin.resources[props.resource]
-            ? state.admin.resources[props.resource].data[
-                  decodeURIComponent(props.match.params.id)
-              ]
+            ? state.admin.resources[props.resource].data[props.id]
             : null,
         isLoading: state.admin.loading > 0,
         version: state.admin.ui.viewVersion,

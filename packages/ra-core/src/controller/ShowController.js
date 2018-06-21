@@ -62,32 +62,24 @@ export class ShowController extends Component {
         }
     }
 
-    getBasePath() {
-        const { location } = this.props;
-        return location.pathname
-            .split('/')
-            .slice(0, -2)
-            .join('/');
-    }
-
     updateData(resource = this.props.resource, id = this.props.id) {
-        this.props.crudGetOne(resource, id, this.getBasePath());
+        this.props.crudGetOne(resource, id, this.props.basePath);
     }
 
     render() {
         const {
-            title,
+            basePath,
             children,
             id,
-            record,
             isLoading,
+            record,
             resource,
+            title,
             translate,
             version,
         } = this.props;
 
         if (!children) return null;
-        const basePath = this.getBasePath();
 
         const resourceName = translate(`resources.${resource}.name`, {
             smart_count: 1,
@@ -112,6 +104,7 @@ export class ShowController extends Component {
 }
 
 ShowController.propTypes = {
+    basePath: PropTypes.string.isRequired,
     children: PropTypes.func.isRequired,
     crudGetOne: PropTypes.func.isRequired,
     record: PropTypes.object,
@@ -121,8 +114,6 @@ ShowController.propTypes = {
     hasShow: PropTypes.bool,
     id: PropTypes.string.isRequired,
     isLoading: PropTypes.bool.isRequired,
-    location: PropTypes.object.isRequired,
-    match: PropTypes.object.isRequired,
     resource: PropTypes.string.isRequired,
     title: PropTypes.any,
     translate: PropTypes.func,
@@ -131,11 +122,9 @@ ShowController.propTypes = {
 
 function mapStateToProps(state, props) {
     return {
-        id: decodeURIComponent(props.match.params.id),
+        id: props.id,
         record: state.admin.resources[props.resource]
-            ? state.admin.resources[props.resource].data[
-                  decodeURIComponent(props.match.params.id)
-              ]
+            ? state.admin.resources[props.resource].data[props.id]
             : null,
         isLoading: state.admin.loading > 0,
         version: state.admin.ui.viewVersion,
