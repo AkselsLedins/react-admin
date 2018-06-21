@@ -6,6 +6,7 @@ import inflection from 'inflection';
 import { reset } from 'redux-form';
 import translate from '../i18n/translate';
 import { crudGetOne, crudUpdate, startUndoable } from '../actions';
+import { REDUX_FORM_NAME } from '../form';
 
 /**
  * Page component for the Edit view
@@ -59,7 +60,7 @@ export class EditController extends Component {
             this.props.id !== nextProps.id ||
             nextProps.version !== this.props.version
         ) {
-            this.props.resetForm('record-form');
+            this.props.resetForm(this.props.formName);
             this.updateData(nextProps.resource, nextProps.id);
         }
     }
@@ -94,7 +95,8 @@ export class EditController extends Component {
                     data,
                     this.props.record,
                     this.getBasePath(),
-                    redirect
+                    redirect,
+                    this.props.formName
                 )
             );
         } else {
@@ -104,7 +106,8 @@ export class EditController extends Component {
                 data,
                 this.props.record,
                 this.getBasePath(),
-                redirect
+                redirect,
+                this.props.formName
             );
         }
     };
@@ -118,6 +121,7 @@ export class EditController extends Component {
             resource,
             translate,
             version,
+            formName,
         } = this.props;
 
         if (!children) return null;
@@ -144,6 +148,7 @@ export class EditController extends Component {
             redirect: this.defaultRedirectRoute(),
             translate,
             version,
+            formName,
         });
     }
 }
@@ -152,6 +157,7 @@ EditController.propTypes = {
     children: PropTypes.func.isRequired,
     crudGetOne: PropTypes.func.isRequired,
     dispatchCrudUpdate: PropTypes.func.isRequired,
+    formName: PropTypes.string,
     record: PropTypes.object,
     hasCreate: PropTypes.bool,
     hasEdit: PropTypes.bool,
@@ -168,6 +174,10 @@ EditController.propTypes = {
     translate: PropTypes.func,
     undoable: PropTypes.bool,
     version: PropTypes.number.isRequired,
+};
+
+EditController.defaultProps = {
+    formName: REDUX_FORM_NAME,
 };
 
 function mapStateToProps(state, props) {
