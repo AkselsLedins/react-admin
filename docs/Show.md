@@ -90,7 +90,7 @@ export const PostShow = (props) => (
 You can replace the list of default actions by your own element using the `actions` prop:
 
 ```jsx
-import CardActions from '@material-ui/core/CardActions';
+import { CardActions } from 'ra-ui-materialui';
 import Button from '@material-ui/core/Button';
 import { EditButton } from 'react-admin';
 
